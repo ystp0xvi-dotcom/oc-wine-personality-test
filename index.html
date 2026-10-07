@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>OC酒塑测试18问</title>
+<style>
+:root{
+  --bg:#FFF6F2;
+  --card:#F6DAD7;
+  --content:#FCEAE6;
+  --content-hover:#B4524B;
+  --green:#8C3B4A;
+  --accent:#D8A857;
+  --text:#4A3733;
+  --muted:#9C8580;
+  --white:#FFFDFB;
+  --border:rgba(74,55,51,.14);
+  --bar-bg:rgba(74,55,51,.12);
+}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+main{width:min(760px,100%);margin:auto;padding:28px 24px 18px}
+h1{margin:8px 0 12px;font-size:clamp(30px,7vw,42px);line-height:1.15;letter-spacing:-.03em;color:var(--green)}
+.intro{margin:0 0 20px;line-height:1.85;color:var(--muted)}
+.hero,.card{border-radius:30px;padding:28px;margin:20px 0;box-shadow:0 8px 26px rgba(74,55,51,.08)}
+.hero{background:var(--card);color:var(--green)}
+.hero h2{margin:0 0 14px;font-size:23px;line-height:1.45}
+.tag{display:inline-block;margin:5px 6px 0 0;padding:8px 14px;border-radius:999px;background:var(--white);color:var(--green);font-size:13px;letter-spacing:.04em}
+#app{margin-top:16px}
+.progress{background:rgba(255,253,251,.72);border:1px solid var(--border);border-radius:24px;padding:13px 16px;margin:14px 0}
+.progress-row{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--muted)}
+.bar-track{height:8px;margin-top:9px;overflow:hidden;border-radius:999px;background:var(--bar-bg)}
+.bar{height:100%;border-radius:999px;background:var(--green);transition:width .25s ease}
+.card{background:var(--card)}
+.question-card{background:var(--content)}
+.question-meta{margin:0 0 10px;color:var(--green);font-size:14px;font-weight:600;letter-spacing:.04em}
+.card h2{margin:0 0 18px;line-height:1.55;font-size:21px;color:var(--green)}
+.option{background:rgba(255,253,251,.64);border:1px solid rgba(74,55,51,.12);border-radius:18px;padding:16px 17px;margin:12px 0;line-height:1.55;cursor:pointer;transition:.18s ease}
+.option:hover{background:rgba(255,253,251,.9);transform:translateY(-1px)}
+.option.selected{background:var(--content-hover);border-color:rgba(74,55,51,.25);color:#fff}
+.option-label{display:inline-flex;width:28px;height:28px;align-items:center;justify-content:center;margin-right:9px;border-radius:50%;background:rgba(74,55,51,.09);color:var(--green);font-weight:700}
+.option.selected .option-label{background:rgba(255,255,255,.35);color:#fff}
+button{width:100%;margin-top:18px;padding:15px 18px;border-radius:22px;font-size:17px;font-weight:600;cursor:pointer;transition:.18s ease;border:none}
+.nav-buttons button:not(.secondary-btn){background:var(--green);color:var(--white);border:1px solid var(--green)}
+.secondary-btn{background:rgba(255,253,251,.75);border:2px solid var(--card);color:var(--muted)}
+button:disabled{opacity:.45;cursor:not-allowed}
+button:active{transform:scale(.99)}
+.nav-buttons{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.nav-buttons button{margin-top:18px}
+
+.result-card{background:var(--content);padding:32px 28px}
+.result-header{text-align:center;margin-bottom:28px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+.result-label{font-size:13px;letter-spacing:.18em;color:var(--muted);margin-bottom:10px;text-transform:uppercase}
+.result-plant{font-size:clamp(34px,8vw,46px);font-weight:700;color:var(--green);margin:0 0 8px;letter-spacing:-.02em}
+.result-tagline{font-size:18px;color:var(--text);margin:0;font-weight:500}
+.result-section{margin:26px 0}
+.result-section h3{margin:0 0 12px;font-size:16px;color:var(--green);letter-spacing:.06em}
+.result-section p{margin:0 0 10px;line-height:1.75;color:var(--text)}
+.dim-list{margin:16px 0 8px}
+.dim-row{display:grid;grid-template-columns:90px 1fr 36px;align-items:center;gap:12px;margin:10px 0;font-size:14px}
+.dim-name{color:var(--muted)}
+.dim-value{text-align:right;color:var(--green);font-weight:600}
+.dim-bar-track{height:10px;border-radius:999px;background:var(--bar-bg);overflow:hidden}
+.dim-bar{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--green),var(--accent));transition:width .4s ease}
+.tags-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.role-tag{display:inline-block;padding:7px 14px;border-radius:999px;background:rgba(216,168,87,.22);color:#8A6418;font-size:13px;font-weight:500}
+.restart-btn{background:var(--green);color:var(--white);border:1px solid var(--green);margin-top:10px}
+.footer{text-align:center;margin:8px 0 10px;color:var(--green);font-size:13px;letter-spacing:.08em}
+
+.result-extra{margin:28px 0 0;padding-top:24px;border-top:1px solid var(--border)}
+.extra-title{margin:0 0 12px;font-size:16px;color:var(--green);letter-spacing:.06em}
+.wine-review{margin:0;padding:16px 18px;border-radius:18px;background:rgba(216,168,87,.13);font-size:17px;line-height:1.7;font-weight:600}
+.tasting-list{display:grid;gap:9px}
+.tasting-item{padding:12px 14px;border-radius:15px;background:rgba(255,253,251,.62);line-height:1.65}
+.tasting-item b{color:var(--green)}
+.highlight-list{display:flex;flex-wrap:wrap;gap:8px}
+.highlight-item{padding:8px 13px;border-radius:999px;background:rgba(255,253,251,.75);font-size:13px;color:var(--text)}
+.scene-box{padding:15px 17px;border-left:3px solid var(--accent);background:rgba(216,168,87,.08);border-radius:4px 16px 16px 4px;line-height:1.75}
+.hidden-box{padding:16px 18px;border-radius:18px;background:rgba(140,59,74,.07);line-height:1.8}
+
+@media (max-width:560px){
+  main{padding:20px 15px 14px}
+  .hero,.card{padding:21px;border-radius:24px}
+  .hero h2{font-size:20px}
+  .card h2{font-size:19px}
+  .option{padding:14px}
+  .result-card{padding:24px 20px}
+  .dim-row{grid-template-columns:72px 1fr 32px}
+}
+</style>
+</head>
+
+<body>
+<main>
+  <h1>OC酒塑测试18问</h1>
+  <p class="intro">通过关系倾向、探索欲、独立性与守护性，探索你的OC最契合的酒塑。</p>
+
+  <div class="hero">
+    <h2>像动物塑一样，测出你的OC酒塑。</h2>
+    <span class="tag">18 QUESTIONS</span>
+    <span class="tag">24 TYPES</span>
+    <span class="tag">WINE PROFILE</span>
+  </div>
+
+  <div id="app"></div>
+  <div class="footer">@收藏夹里的熊</div>
+</main>
+
+<script>
+/* ========== 24种酒塑完整档案（类别名，不含品牌） ========== */
+const wines = [
+  {name:"精酿IPA",tagline:"苦味鲜明、个性张扬的先锋派",
+    analysis:"IPA以浓烈的啤酒花苦味和强烈的个性著称，入口直接、毫不掩饰自己的态度。你的OC表达欲强，习惯用最直接的方式展现自己的立场，不害怕被说“太冲”。<br><br>这种鲜明个性容易让TA在人群中被记住，也是团队里敢于表达不同意见的那个人。",
+    roles:["先锋派","直言不讳者","态度担当"],review:"入口锋利，个性鲜明，第一口就让人记住。",tasting:["初见：不绕弯，存在感很强。", "相处：越熟越能发现TA其实很讲原则。", "余韵：离开人群后，TA留下的态度依然很鲜明。"],highlights:["需要有人率先打破沉默", "团队意见僵持、需要明确表态", "陌生环境里主动打开局面"],scene:"夜晚的地下酒吧 / 临时起意的聚会 / 一群人聊到兴起的深夜",hidden:"锋利之外，TA还有一套自己很看重的原则与坚持。"},
+  {name:"世涛黑啤",tagline:"浓郁醇厚、深沉内敛的沉稳派",
+    analysis:"世涛以焦香浓郁、口感厚重著称，初尝浓烈，细品却能发现层层复杂的风味。你的OC情绪不轻易外露，但内心世界远比表面丰富，习惯把复杂的情感沉淀之后再表达。<br><br>这种沉稳感让TA成为值得信赖的倾听者。",
+    roles:["沉稳担当","深藏不露者","情绪沉淀者"],review:"浓郁而克制，第一口沉静，回味却很深。",tasting:["初见：话不多，情绪藏得很稳。", "相处：熟悉之后，会发现TA的内心层次远比表面丰富。", "余韵：越是离开之后，越容易想起TA没说出口的部分。"],highlights:["深夜长谈", "需要耐心倾听的场合", "复杂局面中保持冷静"],scene:"雨夜室内 / 昏暗酒吧角落 / 两个人慢慢聊到很晚",hidden:"TA的情绪并不总是直接呈现，更多时候会先在心里沉淀。"},
+  {name:"赤霞珠",tagline:"结构感强、掌控全局的领袖气质",
+    analysis:"赤霞珠厚重、品味分明，是红酒里最具“掌控感”的品种之一，陈年后愈发有层次。你的OC天生具备领导气质，习惯把控大局，在复杂局面里依然能保持清晰的判断。<br><br>这种掌控力让TA很容易成为团队的核心支柱。",
+    roles:["掌控者","领袖气质","领导型人格"],review:"骨架稳、力量足，属于越品越能感到掌控力的一杯。",tasting:["初见：可靠、有主见，很难被忽略。", "相处：会自然承担决策与收拾残局的角色。", "余韵：即使不在场，也容易成为大家默认的参照。"],highlights:["需要做决定的时候", "团队陷入混乱的时候", "重要场合承担核心责任"],scene:"正式晚宴 / 重要庆祝 / 一场需要主心骨的聚会",hidden:"掌控感的另一面，是TA对秩序、确定性与局面走向的敏锐关注。"},
+  {name:"黑皮诺",tagline:"细腻敏感、难以捉摸的优雅浪漫派",
+    analysis:"黑皮诺娇贵难种，风味细腻多变，同一片土地也可能酿出截然不同的表达。你的OC情感丰富且敏锐，情绪常常随环境微妙变化，拥有极高的感知力和审美。<br><br>这种细腻让TA在情感表达和艺术感知上极具优势。",
+    roles:["优雅浪漫派","敏感知觉者","多变灵魂"],review:"轻盈、细腻又难以一次看透，回味比入口更动人。",tasting:["初见：安静、优雅，不急着展示自己。", "相处：细微的情绪变化会被TA一一捕捉。", "余韵：真正熟悉后，才会发现TA有很多层。"],highlights:["两个人独处", "需要察觉微妙情绪的场合", "艺术、创作与审美相关的环境"],scene:"安静餐厅 / 雨天窗边 / 深夜散步后的慢聊",hidden:"TA对关系里的细微变化很敏锐，常常能较早察觉气氛与情绪的变化。"},
+  {name:"波特酒",tagline:"甜美浓郁、念旧深情的怀旧派",
+    analysis:"波特酒经强化陈酿，风味甜美浓郁，越陈越香，常被用来纪念重要的时刻。你的OC重视回忆与情感的沉淀，习惯把珍贵的经历反复回味，对旧日时光怀有深厚的眷恋。<br><br>这种深情让TA在关系里格外令人安心。",
+    roles:["怀旧派","深情守候者","回忆收藏家"],review:"甜而不轻浮，像一段被时间反复温习过的旧回忆。",tasting:["初见：温和，容易让人产生亲近感。", "相处：会慢慢分享自己的故事与珍贵记忆。", "余韵：真正让人舍不得的，是TA对过去的认真。"],highlights:["旧友重逢", "纪念重要时刻", "需要珍惜关系与回忆的场合"],scene:"老房子里的晚餐 / 冬夜壁炉旁 / 翻旧照片时的一杯酒",hidden:"TA会把珍贵的人与事长久地放在记忆里，并反复回想其中的细节。"},
+  {name:"酱香型白酒",tagline:"层次复杂、后劲悠长的深藏不露者",
+    analysis:"酱香型白酒酿造工艺复杂，风味层次丰富，初尝温和，后劲却绵长持久。你的OC表面低调平和，实际内涵深厚，真正了解TA需要时间，但一旦熟悉就会发现TA远比初印象复杂精彩。<br><br>这种深度让TA经得起长期相处和细品。",
+    roles:["深藏不露者","后劲担当","复杂灵魂"],review:"初入口不急着讨好，真正的层次要留给时间。",tasting:["初见：低调、克制，不容易被一眼看透。", "相处：越熟悉，越能发现复杂而稳定的内核。", "余韵：长期相处后反而越来越有分量。"],highlights:["长期合作", "复杂问题需要耐心拆解", "只有少数人真正了解TA的关系里"],scene:"老友小聚 / 长桌宴席 / 一场从傍晚聊到深夜的谈话",hidden:"TA的沉默往往意味着仍在观察与整理，通常会对真正信任的人表达更多。"},
+  {name:"清香型白酒",tagline:"清冽干净、直来直去的纯粹派",
+    analysis:"清香型白酒口感清爽纯净，工艺讲究“清字当头”，不追求复杂修饰。你的OC性格直接坦率，不喜欢拐弯抹角，待人处事干脆利落，是让人很省心的类型。<br><br>这种纯粹感让TA值得信赖。",
+    roles:["纯粹派","直率担当","清爽系人格"],review:"干净、利落，不需要多余修饰就能让人记住。",tasting:["初见：直率，不太让人费劲猜。", "相处：边界清楚，答应的事情通常说到做到。", "余韵：留下的是一种简单可靠的安心感。"],highlights:["需要快速沟通", "合作分工明确的团队", "关系里需要坦诚表达的时候"],scene:"清爽的白昼 / 简单的家宴 / 几个熟人直接聊正事",hidden:"TA倾向于保留最直接、最清晰的表达，把不必要的复杂留在表面之外。"},
+  {name:"桂花酒",tagline:"温柔绵软、甜而不腻的治愈系",
+    analysis:"桂花酒香气温柔馥郁，入口绵软回甘，带着浓浓的秋日治愈感。你的OC性格温和体贴，总能用恰到好处的温柔抚平周围人的情绪，不会让人感到压力。<br><br>这种治愈力让TA成为团队里的情绪稳定剂。",
+    roles:["治愈系","温柔担当","情绪稳定剂"],review:"香气柔和，入口温润，是让人不自觉放松下来的一杯。",tasting:["初见：温柔，没有强烈的压迫感。", "相处：会自然照顾到别人的情绪。", "余韵：即使没有说很多话，也会让人觉得被安稳地接住。"],highlights:["朋友情绪低落时", "第一次融入新群体", "需要缓和紧张气氛的时候"],scene:"秋日晚风 / 温暖的小餐馆 / 一群熟人慢慢吃饭聊天",hidden:"TA的温柔并非没有底线，只是习惯先照顾别人，再处理自己的情绪。"},
+  {name:"单一麦芽威士忌",tagline:"特立独行、坚持本味的孤傲匠人",
+    analysis:"单一麦芽威士忌坚持只用一种麦芽、一座蒸馏厂出产，拒绝混调，风味个性鲜明。你的OC有自己坚持的标准，不愿为了迎合他人而改变本色，宁缺毋滥。<br><br>这种坚持让TA的作品/人格辨识度极高。",
+    roles:["孤傲匠人","原味主义者","标准坚持者"],review:"不靠讨好取胜，坚持自己的风味，越懂的人越容易喜欢。",tasting:["初见：有距离感，不急着迎合。", "相处：会发现TA拥有非常稳定的个人标准。", "余韵：真正留下的是辨识度，而不是热闹。"],highlights:["独立完成创作", "面对群体意见仍坚持原则", "需要专业判断与个人审美的场合"],scene:"一个人的深夜工作台 / 安静酒吧 / 只邀请少数人的小聚",hidden:"TA对自己的标准与偏好有明确坚持，不太会为了获得认同而改变它们。"},
+  {name:"泥煤威士忌",tagline:"浓烈粗犷、不加掩饰的野性派",
+    analysis:"泥煤威士忌带着浓烈的烟熏泥煤气息，风味粗犷直接，爱憎分明，没有中间地带。你的OC情感浓烈、表达张扬，从不掩饰自己的喜怒，是让人一眼记住的存在。<br><br>这种野性魅力极具感染力。",
+    roles:["野性派","浓烈担当","爱憎分明者"],review:"烟熏、浓烈、毫不退让，属于一入口就有态度的酒。",tasting:["初见：攻击性和存在感都很强。", "相处：爱憎分明，喜欢就是喜欢，不喜欢也很难装。", "余韵：即使不合口味，也很难忘记。"],highlights:["需要强烈表达立场", "危机或冲突场合", "所有人都过于谨慎时"],scene:"深夜Live House / 风很大的户外 / 一场毫不客气的坦白",hidden:"浓烈的表达背后，有着清晰而明确的情感立场。"},
+  {name:"波本威士忌",tagline:"热情直爽、甜蜜奔放的豪迈派",
+    analysis:"波本威士忌带着焦糖和香草的甜香，口感圆润奔放，是美式豪迈的代表。你的OC热情开朗，待人真诚直接，情绪感染力强，很容易把气氛带动起来。<br><br>这种豪迈让TA总能成为聚会里的焦点。",
+    roles:["豪迈派","热情担当","气氛带动者"],review:"甜香明亮、热情直接，是一杯会主动把气氛点亮的酒。",tasting:["初见：很快就能和人熟起来。", "相处：喜欢把快乐分享出去。", "余韵：想到TA时，往往先想到热闹和笑声。"],highlights:["朋友聚会", "第一次认识新朋友", "需要把冷场重新炒热的时候"],scene:"夏夜露台 / 篝火旁 / 热闹的朋友聚会",hidden:"TA习惯用轻松的方式面对许多事情，同时也会珍惜真正愿意认真倾听的人。"},
+  {name:"纯米大吟酿",tagline:"清雅细腻、追求极致的完美主义者",
+    analysis:"纯米大吟酿对原料和工艺的要求极为苛刻，追求极致的纯净与细腻口感。你的OC对自己要求很高，做事精益求精，不轻易妥协于“差不多就好”。<br><br>这种极致追求让TA的作品/能力总是令人惊艳。",
+    roles:["完美主义者","极致追求者","清雅匠人"],review:"清雅而精致，每一处细节都透露着不愿将就的认真。",tasting:["初见：干净、有分寸，审美很明确。", "相处：会不断打磨自己与正在做的事情。", "余韵：留下的是完成度与细节感。"],highlights:["重要作品发布", "需要高标准完成任务", "安静投入创作的阶段"],scene:"精致晚餐 / 美术馆夜场 / 一个人专注完成作品的夜晚",hidden:"TA会持续检查与打磨自己的作品，也常常把完成标准放在一个较高的位置。"},
+  {name:"浊酒",tagline:"朦胧温柔、看似随性实则用心的治愈系",
+    analysis:"浊酒未经过度过滤，保留了米粒的朦胧质感，口感温润家常，带着质朴的烟火气。你的OC看起来随和不拘小节，实际在细节处都藏着用心，温柔是TA不动声色的底色。<br><br>这种质朴感让人感到格外安心。",
+    roles:["质朴治愈者","用心人","烟火气担当"],review:"朦胧温润，不抢风头，却有一种很难替代的生活气。",tasting:["初见：随和、不太有攻击性。", "相处：会发现TA对细节其实很上心。", "余韵：留下的是一种家一样的安心。"],highlights:["朋友需要陪伴的时候", "团队日常相处", "庆祝一些很小但真实的事情"],scene:"家常晚饭 / 小厨房里边做饭边聊天 / 雨天窝在家里",hidden:"看起来不争不抢，但TA对重要的人和事其实非常认真。"},
+  {name:"香槟",tagline:"气泡跃动、天生自带高光的庆典型人格",
+    analysis:"香槟经过二次发酵产生细腻气泡，常是庆祝重要时刻的首选，自带仪式感和高光氛围。你的OC天生自带存在感，出现在哪里都容易成为焦点，情绪活跃富有感染力。<br><br>这种高光气质让TA很适合成为团队的门面担当。",
+    roles:["庆典型人格","高光担当","气泡活力源"],review:"气泡明亮、仪式感十足，天生适合成为值得纪念的那一刻。",tasting:["初见：存在感自然，不需要刻意抢镜。", "相处：很会制造值得记住的瞬间。", "余韵：热闹散去之后，仍然让人记得那份高光。"],highlights:["庆祝成功", "重要登场", "需要带动全场情绪的时刻"],scene:"庆功宴 / 新年倒数 / 盛大庆典与重要纪念日",hidden:"TA喜欢有仪式感与高光感的时刻，也会关注现场其他人的情绪与参与感。"},
+  {name:"普罗塞克气泡酒",tagline:"轻盈欢快、随时准备热闹的气氛担当",
+    analysis:"普罗塞克口感轻盈、价格亲民，是日常小聚、轻松场合里最受欢迎的气泡酒。你的OC不需要特别的场合也能带来快乐，随时都能加入热闹，让气氛变得轻松。<br><br>这种随和的快乐感染力很强。",
+    roles:["气氛担当","轻盈快乐源","随时在场者"],review:"轻盈、欢快，没有负担，像随时都能加入的好心情。",tasting:["初见：亲切，很容易融入人群。", "相处：总能找到让大家开心的小事情。", "余韵：不沉重，却会让人想起很多快乐时刻。"],highlights:["陌生人破冰", "临时聚会", "气氛开始冷下来时"],scene:"下午野餐 / 海边聚会 / 下班后突然决定去喝一杯",hidden:"TA倾向于享受自然发生的快乐，也很重视人与人之间轻松的连接。"},
+  {name:"梅酒",tagline:"酸甜平衡、温柔坚韧的疗愈系",
+    analysis:"梅酒用青梅的酸涩经过时间转化出温润的甜，酸与甜在其中达成微妙的平衡。你的OC情感丰富但不极端，懂得在坚持和妥协之间找到属于自己的平衡点。<br><br>这种平衡感让TA的情绪很少走向极端，容易让人感到舒适。",
+    roles:["疗愈系","平衡者","温柔坚韧派"],review:"酸甜交织，温柔里带着韧性，越喝越觉得平衡。",tasting:["初见：柔和、容易亲近。", "相处：懂得在坚持与退让之间找尺度。", "余韵：不会过分浓烈，却很耐相处。"],highlights:["关系出现分歧时", "需要调和不同立场", "陪伴别人走过低谷"],scene:"春日小酌 / 两三个朋友的晚餐 / 安静聊心事的晚上",hidden:"TA会在关系中寻找自己的边界，也会根据具体情况调整表达与坚持的方式。"},
+  {name:"蜂蜜酒",tagline:"古老珍贵、甘甜醇厚的温暖守护者",
+    analysis:"蜂蜜酒是人类历史上最古老的酒类之一，风味甘甜醇厚，常与庆典、承诺等重要仪式相关联。你的OC情感深厚且忠诚，一旦认定的关系会用心守护很久，带着一种古老而质朴的温暖。<br><br>这种守护感让TA值得托付信任。",
+    roles:["温暖守护者","古老忠诚派","甘甜担当"],review:"甘甜厚实，像一份被认真保存很久的承诺。",tasting:["初见：温暖、可靠，很容易产生信任感。", "相处：一旦认定，就会持续投入。", "余韵：关系结束后仍会记得自己曾经认真守护过。"],highlights:["重要的人需要依靠时", "长期关系", "承诺与纪念相关的时刻"],scene:"冬夜壁炉 / 重要纪念日晚餐 / 老朋友久别重逢",hidden:"守护欲的背后，是TA对关系稳定性的高度重视。"},
+  {name:"樱花酒",tagline:"短暂绚烂、珍惜当下的浪漫主义者",
+    analysis:"樱花酒风味轻盈短暂，如同樱花盛放的花期一般转瞬即逝，珍贵在于那一刻的绚烂。你的OC懂得珍惜当下，情感浓烈但不强求永恒，更专注于把每一个瞬间活得尽兴。<br><br>这种浪漫态度让TA的存在格外令人难忘。",
+    roles:["浪漫主义者","瞬间珍藏者","绚烂珍贵"],review:"轻盈而绚烂，最珍贵的不是长久，而是那一刻真的很美。",tasting:["初见：浪漫、鲜活，很容易留下印象。", "相处：重视共同经历，而不是形式上的永恒。", "余韵：越短暂的瞬间，有时越值得记住。"],highlights:["旅行途中", "告别前的最后一晚", "第一次共同经历重要事件"],scene:"樱花季夜晚 / 春日约会式散步 / 一场没有预告的短途旅行",hidden:"TA更关注当下正在发生的体验，也会把短暂而具体的瞬间记在心里。"},
+  {name:"马提尼",tagline:"极简克制、态度鲜明的经典主义者",
+    analysis:"马提尼配方极简，只靠几种基酒的比例就能呈现截然不同的风格，是“少即是多”的经典代表。你的OC不喜欢多余的修饰，态度鲜明，用最简洁的方式表达自己的立场。<br><br>这种克制的美学让TA自带一种高级感。",
+    roles:["经典主义者","极简态度派","高级感担当"],review:"极简、克制、锋利，越少越能显出态度。",tasting:["初见：冷静、有分寸，很少主动解释自己。", "相处：标准明确，不喜欢无效社交。", "余韵：真正留下的是一种干净而高级的距离感。"],highlights:["需要保持冷静判断", "正式场合", "拒绝随波逐流的时候"],scene:"黑白调酒吧 / 城市夜景 / 一场人数很少的正式晚宴",hidden:"TA的情绪表达通常经过筛选，更倾向于先整理清楚，再做出回应。"},
+  {name:"莫吉托",tagline:"清新活泼、永远在探索新鲜感的自由派",
+    analysis:"莫吉托以薄荷与青柠调配出清爽活泼的口感，充满夏日自由的气息。你的OC精力充沛，总是在寻找新鲜的体验，不喜欢被一成不变的生活困住。<br><br>这种探索欲让TA总能带来新鲜的视角。",
+    roles:["自由派","清新探索者","活力担当"],review:"青柠与薄荷一样清醒又自由，喝下去像打开一扇新窗。",tasting:["初见：活泼，好奇心很强。", "相处：总会不断提出新的想法。", "余韵：和TA相处，很难一直停留在原地。"],highlights:["旅行与冒险", "新项目启动", "所有人陷入重复日常的时候"],scene:"夏夜海边 / 旅行途中 / 临时决定去一个没去过的地方",hidden:"TA对新鲜事物保持持续兴趣，同时也会保留自己熟悉的关系与经历。"},
+  {name:"龙舌兰日出",tagline:"热烈张扬、色彩斑斓的戏剧型人格",
+    analysis:"龙舌兰日出因杯中渐变的色彩如日出般绚烂而得名，风味热烈直接，充满戏剧张力。你的OC情感表达浓烈丰富，喜欢制造令人印象深刻的瞬间，骨子里带着一点表演欲。<br><br>这种戏剧感让TA总能成为话题中心。",
+    roles:["戏剧型人格","色彩担当","高光制造者"],review:"色彩先声夺人，热烈得像一场不肯低调收场的日落。",tasting:["初见：很有戏剧感，存在感极强。", "相处：情绪丰富，喜欢制造 memorable 的瞬间。", "余韵：即使离开，也容易成为别人谈论的话题。"],highlights:["舞台与公开表达", "庆典中的核心时刻", "需要制造记忆点的时候"],scene:"日落屋顶 / 音乐节 / 一场所有人都情绪高涨的夜晚",hidden:"强烈的表达欲背后，是TA非常在意自己是否真正被看见。"},
+  {name:"血腥玛丽",tagline:"辛辣刺激、反差感十足的危险魅力",
+    analysis:"血腥玛丽以番茄汁调配基酒、再加入香料提味，口感复杂刺激，常被视为“早午餐里的叛逆”。你的OC身上藏着强烈的反差感，表面可能温和，骨子里却藏着锐利和不羁。<br><br>这种反差魅力让TA充满话题性。",
+    roles:["反差魅力","辛辣担当","叛逆灵魂"],review:"第一口是辛辣，第二口是反差，最后留下的是一点危险的好奇心。",tasting:["初见：可能比想象中更难判断。", "相处：反差会一点点暴露出来。", "余韵：越想给TA下定义，越容易发现还有另一面。"],highlights:["打破刻板印象", "需要出其不意的方案", "面对规则过于僵化的环境"],scene:"周末早午餐 / 混乱又有趣的聚会 / 一场意外不断的城市夜游",hidden:"TA并非单纯为了反叛而行动，更倾向于先判断规则是否符合自己的目的与原则。"},
+  {name:"醪糟",tagline:"朴实无华、家常温暖的踏实派",
+    analysis:"醪糟工艺简单朴素，是最贴近日常生活的酒，温润家常，少有攻击性。你的OC不追求惊艳他人，更看重脚踏实地地把日子过好，带着一种让人安心的烟火气。<br><br>这种踏实感让TA成为身边人最依赖的存在。",
+    roles:["踏实派","家常温暖者","烟火气人格"],review:"没有炫技，却温温柔柔地留下一种家的味道。",tasting:["初见：朴实、不喧哗，很容易让人放松。", "相处：习惯用实际行动而不是漂亮话表达在乎。", "余韵：越长久越让人觉得可靠。"],highlights:["日常陪伴", "团队需要稳定后勤", "重要的人需要长期支持时"],scene:"家里刚出锅的晚饭 / 冬天的小厨房 / 熟人围坐的一张桌子",hidden:"TA的存在感更多来自持续而稳定的行动，而不是刻意制造戏剧性。"},
+  {name:"荔枝酒",tagline:"甜蜜张扬却带点小任性的少女心",
+    analysis:"荔枝酒风味香甜浓郁，带着鲜明的果香和一点点张扬的个性，讨喜却不随大流。你的OC情感表达直接甜美，偶尔会有点小任性，但这份率真恰恰是TA最可爱的地方。<br><br>这种甜美直率很容易拉近和他人的距离。",
+    roles:["少女心担当","甜蜜张扬者","率真灵魂"],review:"甜香明亮，带一点小任性，讨喜却绝不寡淡。",tasting:["初见：甜、活泼，很容易拉近距离。", "相处：会慢慢暴露一点自己的小脾气。", "余韵：率真感反而成为最让人记住的部分。"],highlights:["朋友聚会", "撒娇式沟通", "需要给沉闷环境增加一点活力"],scene:"夏日下午 / 甜品店聚会 / 一群熟人边吃边笑的晚上",hidden:"TA在真正亲近的人面前会更直接地表达情绪、偏好与小小的任性。"}
+];
+
+/* ========== 18题题库（4维度：关系R/探索E/独立I/守护G，选项顺序逐题打乱） ========== */
+const questions = [
+  {q:"第一次参加聚会，面对满桌酒，你的OC会？",opts:[
+    {t:"立刻挑一款没喝过的，想尝尝鲜",s:[0,2,0,0]},
+    {t:"先看看大家在喝什么，一起点",s:[2,0,0,0]},
+    {t:"留意有没有人不胜酒力，帮忙照应",s:[0,0,0,2]},
+    {t:"点自己一直想喝的那款，不受旁人影响",s:[0,0,2,0]}
+  ]},
+  {q:"独自一人的夜晚，你的OC更想？",opts:[
+    {t:"一个人安静地喝，享受独处",s:[0,0,2,0]},
+    {t:"留一部分给可能会来找自己的人",s:[0,0,0,2]},
+    {t:"在心里想着和谁分享会更好",s:[2,0,0,0]},
+    {t:"翻出家里没开封的新酒尝试",s:[0,2,0,0]}
+  ]},
+  {q:"面对一款从没喝过的酒，你的OC的反应是？",opts:[
+    {t:"想拉上朋友一起尝，交流感受",s:[2,0,0,0]},
+    {t:"自己先默默试过，再决定喜不喜欢",s:[0,0,2,0]},
+    {t:"毫不犹豫直接点一杯",s:[0,2,0,0]},
+    {t:"先确认度数/成分，怕对谁不合适",s:[0,0,0,2]}
+  ]},
+  {q:"如果要为朋友挑一瓶酒，你的OC会？",opts:[
+    {t:"挑TA能接受、不会喝太伤身体的那款",s:[0,0,0,2]},
+    {t:"推荐一款小众但惊艳的选择，带来新鲜感",s:[0,2,0,0]},
+    {t:"送TA会喜欢、但自己未必认同的也没关系",s:[0,0,2,0]},
+    {t:"选一瓶能一起聊很久的、有故事的酒",s:[2,0,0,0]}
+  ]},
+  {q:"微醺之后，你的OC的状态更像？",opts:[
+    {t:"更想尝试点不一样的事，脑洞大开",s:[0,2,0,0]},
+    {t:"更沉浸在自己的世界里",s:[0,0,2,0]},
+    {t:"更想找人说说话，分享此刻的情绪",s:[2,0,0,0]},
+    {t:"更在意身边人有没有照顾好",s:[0,0,0,2]}
+  ]},
+  {q:"面对“劝酒”这种场合，你的OC会？",opts:[
+    {t:"随大流举杯，享受氛围",s:[2,0,0,0]},
+    {t:"留意别人是否真的想喝，适时帮忙挡一下",s:[0,0,0,2]},
+    {t:"来者不拒，当成新的体验",s:[0,2,0,0]},
+    {t:"按自己的节奏喝，不被外界节奏带着走",s:[0,0,2,0]}
+  ]},
+  {q:"你的OC对“隐藏酒单”（需要熟客才知道）的态度：",opts:[
+    {t:"不在意是不是隐藏款，自己喜欢就好",s:[0,0,2,0]},
+    {t:"很想和熟悉的人一起解锁这份仪式感",s:[2,0,0,0]},
+    {t:"担心贸然尝试会不会不适合新手/敏感体质的朋友",s:[0,0,0,2]},
+    {t:"对“要熟客才知道”这件事充满好奇，想立刻解锁",s:[0,2,0,0]}
+  ]},
+  {q:"一个人小酌时，你的OC在想什么？",opts:[
+    {t:"想着今天谁需要被照顾、被在意",s:[0,0,0,2]},
+    {t:"单纯放空，和自己对话",s:[0,0,2,0]},
+    {t:"想起某个人，有点想联系TA",s:[2,0,0,0]},
+    {t:"脑子里开始冒出各种新计划和点子",s:[0,2,0,0]}
+  ]},
+  {q:"面对度数很高、后劲很大的酒，你的OC会？",opts:[
+    {t:"想试试自己的极限在哪里",s:[0,2,0,0]},
+    {t:"提前想好怎么照顾好自己和在场的人",s:[0,0,0,2]},
+    {t:"按自己的节奏慢慢喝，不逞强",s:[0,0,2,0]},
+    {t:"更在意气氛有没有被这杯酒带起来",s:[2,0,0,0]}
+  ]},
+  {q:"你的OC选酒时最看重的是？",opts:[
+    {t:"适不适合和别人分享、聊起来",s:[2,0,0,0]},
+    {t:"够不够特别、有没有新鲜感",s:[0,2,0,0]},
+    {t:"喝了之后会不会给别人添麻烦",s:[0,0,0,2]},
+    {t:"纯粹自己喜不喜欢，不管别人怎么看",s:[0,0,2,0]}
+  ]},
+  {q:"酒后吐真言，你的OC通常会说出：",opts:[
+    {t:"关于自己内心真实的想法",s:[0,0,2,0]},
+    {t:"关于某个还没实现的新计划",s:[0,2,0,0]},
+    {t:"关于对某个人藏了很久的话",s:[2,0,0,0]},
+    {t:"关于自己一直在默默守护的东西",s:[0,0,0,2]}
+  ]},
+  {q:"遇到喝醉的朋友，你的OC会？",opts:[
+    {t:"第一时间照顾对方，确保TA安全",s:[0,0,0,2]},
+    {t:"陪在TA身边，一起把这段经历记下来",s:[2,0,0,0]},
+    {t:"继续做自己的事，不被打扰",s:[0,0,2,0]},
+    {t:"觉得这也是一种有趣的插曲",s:[0,2,0,0]}
+  ]},
+  {q:"你的OC最享受喝酒的哪个瞬间？",opts:[
+    {t:"第一口未知滋味带来的惊喜",s:[0,2,0,0]},
+    {t:"和朋友碰杯、聊得尽兴的瞬间",s:[2,0,0,0]},
+    {t:"一个人静静回味余韵的时刻",s:[0,0,2,0]},
+    {t:"看到身边人都喝得开心安心的瞬间",s:[0,0,0,2]}
+  ]},
+  {q:"面对“今晚不醉不归”的提议，你的OC会？",opts:[
+    {t:"按自己的酒量来，不被气氛裹挟",s:[0,0,2,0]},
+    {t:"提醒大家注意身体，适度就好",s:[0,0,0,2]},
+    {t:"跃跃欲试，想看看今晚会发生什么",s:[0,2,0,0]},
+    {t:"很享受这种和大家一起放开的氛围",s:[2,0,0,0]}
+  ]},
+  {q:"你的OC珍藏一瓶酒的理由是？",opts:[
+    {t:"因为这瓶酒承载着和某人的回忆",s:[2,0,0,0]},
+    {t:"单纯因为自己很喜欢这个味道",s:[0,0,2,0]},
+    {t:"想留到对的人出现时，一起分享",s:[0,0,0,2]},
+    {t:"因为它本身就很难得，值得收藏",s:[0,2,0,0]}
+  ]},
+  {q:"换一个陌生的酒吧，你的OC会？",opts:[
+    {t:"先留意这里安不安全、靠不靠谱",s:[0,0,0,2]},
+    {t:"很兴奋，期待发现新的惊喜",s:[0,2,0,0]},
+    {t:"希望能认识一些新朋友",s:[2,0,0,0]},
+    {t:"自己找个角落，安静感受这里的氛围",s:[0,0,2,0]}
+  ]},
+  {q:"你的OC觉得“好酒”的标准是？",opts:[
+    {t:"能带来意料之外的风味体验",s:[0,2,0,0]},
+    {t:"喝完之后自己是否真心觉得舒服",s:[0,0,2,0]},
+    {t:"不会给身体或别人带来负担",s:[0,0,0,2]},
+    {t:"喝的时候能不能聊得尽兴",s:[2,0,0,0]}
+  ]},
+  {q:"如果用一种状态形容喝完酒后的你的OC：",opts:[
+    {t:"想找人说说话，格外真诚",s:[2,0,0,0]},
+    {t:"更想确认身边重要的人都还好",s:[0,0,0,2]},
+    {t:"更安静，沉浸在自己的思绪里",s:[0,0,2,0]},
+    {t:"脑子里全是新奇的想法，停不下来",s:[0,2,0,0]}
+  ]}
+];
+
+/* ========== 状态 ========== */
+let index = 0;
+let answers = [];
+let scores = [0,0,0,0]; // 关系 / 探索 / 独立 / 守护
+const TOTAL = questions.length;
+
+function render(){
+  if(index >= TOTAL){ return showResult(); }
+
+  const item = questions[index];
+  const percent = Math.round((index/TOTAL)*100);
+
+  document.getElementById('app').innerHTML = `
+    <div class="progress">
+      <div class="progress-row">
+        <span>第 ${index+1} / ${TOTAL} 题</span>
+        <span>${percent}%</span>
+      </div>
+      <div class="bar-track"><div class="bar" style="width:${percent}%"></div></div>
+    </div>
+
+    <section class="card question-card">
+      <p class="question-meta">QUESTION ${String(index+1).padStart(2,'0')}</p>
+      <h2>${item.q}</h2>
+      ${item.opts.map((o,i)=>`
+        <div class="option ${answers[index]===i?'selected':''}" onclick="choose(${i},this)">
+          <span class="option-label">${String.fromCharCode(65+i)}</span>${o.t}
+        </div>
+      `).join('')}
+      <div class="nav-buttons">
+        <button class="secondary-btn" onclick="prev()" ${index===0?'disabled':''}>上一题</button>
+        <button onclick="next()">下一题</button>
+      </div>
+    </section>
+  `;
+}
+
+function choose(i, el){
+  answers[index]=i;
+  document.querySelectorAll('.option').forEach(x=>x.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function recompute(){
+  scores=[0,0,0,0];
+  answers.forEach((a,qi)=>{
+    if(a===undefined) return;
+    const s=questions[qi].opts[a].s;
+    scores[0]+=s[0]; scores[1]+=s[1]; scores[2]+=s[2]; scores[3]+=s[3];
+  });
+}
+
+function next(){
+  if(answers[index]===undefined) return;
+  recompute();
+  index++;
+  render();
+}
+
+function prev(){
+  if(index>0){ recompute(); index--; render(); }
+}
+
+function normalize(arr){
+  const max=Math.max(...arr,1);
+  return arr.map(v=>Math.round((v/max)*100));
+}
+
+function pickWine(){
+  // 四维度排序哈希映射（改进版）
+  // 1. 按得分从高到低排序（同分按维度索引稳定打破）
+  // 2. 将排列转换为 0~23 的 Lehmer 码
+  // 3. 再叠加最高维与次高维的实际分值，打散并列情况，使 24 种结果概率接近均匀
+  const c = scores.map(s => s / 2); // 转为 0~18 的计数
+  const dims = [0, 1, 2, 3];
+  dims.sort((a, b) => c[b] - c[a] || a - b);
+
+  let available = [0, 1, 2, 3];
+  let id = 0;
+  for (let i = 0; i < 3; i++) {
+    const idx = available.indexOf(dims[i]);
+    id = id * (4 - i) + idx;
+    available.splice(idx, 1);
+  }
+  // 用最高与次高维度的计数值进一步打散，提升均匀性
+  id = (id + c[dims[0]] * 2 + c[dims[1]]) % 24;
+  return id;
+}
+
+function showResult(){
+  recompute();
+  const id = pickWine();
+  const w = wines[id];
+  const dims = normalize(scores);
+  const dimNames = ['关系倾向','探索欲','独立性','守护性'];
+
+  document.getElementById('app').innerHTML = `
+    <section class="card result-card">
+      <div class="result-header">
+        <div class="result-label">YOUR OC WINE TYPE</div>
+        <h2 class="result-plant">${w.name}</h2>
+        <p class="result-tagline">${w.tagline}</p>
+      </div>
+
+      <div class="result-section">
+        <h3>维度对比</h3>
+        <div class="dim-list">
+          ${dimNames.map((name,i)=>`
+            <div class="dim-row">
+              <span class="dim-name">${name}</span>
+              <div class="dim-bar-track"><div class="dim-bar" style="width:${dims[i]}%"></div></div>
+              <span class="dim-value">${dims[i]}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <div class="result-section">
+        <h3>类型分析</h3>
+        <p>${w.analysis}</p>
+      </div>
+
+      <div class="result-extra">
+        <h3 class="extra-title">一句话酒评</h3>
+        <p class="wine-review">${w.review}</p>
+      </div>
+
+      <div class="result-extra">
+        <h3 class="extra-title">观色 · 闻香 · 品味</h3>
+        <div class="tasting-list">
+          ${w.tasting.map((x,i)=>{
+            const labels=['观色','闻香','品味'];
+            return `<div class="tasting-item"><b>${labels[i]}</b>　${x.replace(/^[^：]*：/,'')}</div>`;
+          }).join('')}
+        </div>
+      </div>
+
+      <div class="result-extra">
+        <h3 class="extra-title">高光时刻</h3>
+        <div class="highlight-list">
+          ${w.highlights.map(x=>`<span class="highlight-item">${x}</span>`).join('')}
+        </div>
+      </div>
+
+      <div class="result-extra">
+        <h3 class="extra-title">最佳饮用场景</h3>
+        <div class="scene-box">${w.scene}</div>
+      </div>
+
+      <div class="result-extra">
+        <h3 class="extra-title">隐藏风味</h3>
+        <div class="hidden-box">${w.hidden}</div>
+      </div>
+
+      <div class="result-section">
+        <h3>适合OC定位</h3>
+        <div class="tags-row">${w.roles.map(r=>`<span class="role-tag">${r}</span>`).join('')}</div>
+      </div>
+
+      <button class="restart-btn" onclick="restart()">重新测试</button>
+    </section>
+  `;
+}
+
+function restart(){
+  index=0; answers=[]; scores=[0,0,0,0];
+  render();
+}
+
+render();
+</script>
+</body>
+</html>
